@@ -2,13 +2,14 @@ const format = require("pg-format");
 const {
   convertTimestampToDate,
   createRef,
-  formatComments,
+  formatComments
 } = require("../helpers/utils");
 const db = require("../connection");
 const { dropTables, createTables } = require("../helpers/manage-tables");
 
 const seed = async ({ topicData, userData, articleData, commentData }) => {
   await dropTables();
+
   await createTables();
 
   const insertTopicsQueryStr = format(
@@ -24,7 +25,7 @@ const seed = async ({ topicData, userData, articleData, commentData }) => {
     userData.map(({ username, name, avatar_url }) => [
       username,
       name,
-      avatar_url,
+      avatar_url
     ])
   );
   const usersPromise = db
@@ -43,7 +44,7 @@ const seed = async ({ topicData, userData, articleData, commentData }) => {
         author,
         body,
         created_at,
-        votes,
+        votes
       ]
     )
   );
@@ -63,7 +64,7 @@ const seed = async ({ topicData, userData, articleData, commentData }) => {
         author,
         article_id,
         votes,
-        created_at,
+        created_at
       ]
     )
   );
