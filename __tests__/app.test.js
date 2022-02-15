@@ -17,26 +17,9 @@ describe("app", () => {
         expect(msg).toBe("invalid path");
       });
   });
-  //   test("status 500 - internal server error", () => {}); // TODO how to test??
 
   describe("/api/topics - GET", () => {
     test("status 200 - responds with array representing topics table", () => {
-      const expectedTopics = [
-        //expected test data
-        {
-          description: "The man, the Mitch, the legend",
-          slug: "mitch"
-        },
-        {
-          description: "Not dogs",
-          slug: "cats"
-        },
-        {
-          description: "what books are made of",
-          slug: "paper"
-        }
-      ];
-
       return request(app)
         .get("/api/topics")
         .expect(200)
