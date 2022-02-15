@@ -67,33 +67,60 @@ describe("app", () => {
         .get("/api/articles/a")
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("bad request");
+          expect(msg).toBe("invalid article_id");
         });
     });
   });
   describe("/api/articles/article_id - PATCH", () => {
-    test("status 200 - updates article", () => {});
-    xtest("status 200 - responds with updated article", () => {
-      const expectedData = {
-        article_id: 1,
-        title: "Living in the shadow of a great man",
-        topic: "mitch",
-        author: "butter_bridge",
-        body: "I find this existence challenging",
-        created_at: "2020-07-09T20:11:00.000Z",
-        votes: 101
-      };
+    test("status 200 - updates article", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: "2" })
+        .then(() => {
+          return request(app).get("/api/articles/1");
+        })
+        .then(({ body: { article } }) => {
+          expect(article.votes).toEqual(102);
+        });
+    });
+    test("status 200 - responds with updated article", () => {
       return request(app)
         .patch("/api/articles/1")
         .send({ inc_votes: "1" })
         .expect(200)
         .then(({ body: { article } }) => {
-          expect(article).toBe(expectedData);
+          expect(article.votes).toEqual(101);
         });
     });
-    test("status 400 - invalid article_id ", () => {});
-    test("status 404 - article not found", () => {});
-    test("status 400 - malformed body eg{}", () => {});
-    test("status 400 - body rejected by psql ie wrong type", () => {});
+    xtest("status 400 - invalid article_id ", () => {
+      return request(app)
+        .patch("/api/articles/a")
+        .send({ inc_votes: "1" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("invalid article_id");
+        });
+    });
+    xtest("status 404 - article not found", () => {
+      return request(app)
+        .patch("/api/articles/15")
+        .send({ inc_votes: "1" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("article not found");
+        });
+    });
+    xtest("status 400 - malformed body eg{}", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({})
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("invalid input");
+        });
+    });
+    xtest("status 400 - body rejected by psql ie wrong type", () => {
+      //TODO decide how to structure promise rejects and input checks
+    });
   });
 });
