@@ -81,7 +81,7 @@ describe("app", () => {
   });
   describe("/api/articles/article_id - PATCH", () => {
     test("status 200 - updates article", () => {});
-    test("status 200 - responds with updated article", () => {
+    xtest("status 200 - responds with updated article", () => {
       const expectedData = {
         article_id: 1,
         title: "Living in the shadow of a great man",
