@@ -16,7 +16,6 @@ describe("app", () => {
         expect(msg).toBe("invalid path");
       });
   });
-  //   test("status 500 - internal server error", () => {}); // TODO how to test??
 
   describe("/api/topics - GET", () => {
     test("status 200 - responds with array representing topics table", () => {
