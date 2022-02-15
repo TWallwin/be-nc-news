@@ -19,7 +19,7 @@ describe("app", () => {
   //   test("status 500 - internal server error", () => {}); // TODO how to test??
 
   describe("/api/topics - GET", () => {
-    test("status 200 - ok", () => {
+    test("status 200 - responds with array representing topics table", () => {
       const expectedTopics = [
         //expected test data
         {
@@ -40,12 +40,20 @@ describe("app", () => {
         .get("/api/topics")
         .expect(200)
         .then(({ body: { topics } }) => {
-          expect(topics).toEqual(expectedTopics);
+          expect(topics).toHaveLength(3);
+          topics.forEach((topic) => {
+            expect(topic).toEqual(
+              expect.objectContaining({
+                description: expect.any(String),
+                slug: expect.any(String)
+              })
+            );
+          });
         });
     });
   });
   describe("/api/articles/article_id", () => {
-    test("status 200 - ok", () => {
+    test("status 200 - responds with article corresponding to article_id", () => {
       const article1 = {
         article_id: 1,
         title: "Living in the shadow of a great man",
@@ -60,7 +68,7 @@ describe("app", () => {
         .get("/api/articles/1")
         .expect(200)
         .then(({ body: { article } }) => {
-          expect(article).toEqual([article1]);
+          expect(article).toEqual(article1);
         });
     });
     test("status 404 - article not found", () => {
