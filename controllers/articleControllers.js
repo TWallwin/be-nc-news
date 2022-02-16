@@ -16,6 +16,7 @@ exports.patchArticle = (req, res, next) => {
     .then(() => {
       return updateArticle(id, incObj);
     })
+    // updateArticle(id, incObj)
     .then((article) => {
       res.status(200).send({ article });
     })
