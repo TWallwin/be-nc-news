@@ -72,7 +72,7 @@ describe("app", () => {
     });
   });
   describe("/api/users", () => {
-    test("status 200 - returns an array of username objects", () => {
+    xtest("status 200 - returns an array of username objects", () => {
       return request(app)
         .get("/api/users")
         .expect(200)
