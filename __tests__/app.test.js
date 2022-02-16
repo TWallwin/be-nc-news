@@ -1,4 +1,3 @@
-
 const app = require("../app.js");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
@@ -72,5 +71,19 @@ describe("app", () => {
         });
     });
   });
+  describe("/api/users", () => {
+    test("status 200 - returns an array of username objects", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body: { users } }) => {
+          expect(users).toHaveLength(4);
+          users.forEach((user) => {
+            expect(user).toEqual(
+              expect.objectContaining({ username: expect.any(String) })
+            );
+          });
+        });
+    });
+  });
 });
-
