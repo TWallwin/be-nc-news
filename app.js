@@ -1,7 +1,9 @@
 const express = require("express");
 const {
   invalidPathError,
-  serverError
+  handleCustomErrors,
+  handlePSQLErrors,
+  handle500s
 } = require("./controllers/errorControllers");
 const bodyParser = require("body-parser");
 
@@ -20,6 +22,9 @@ app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticleById);
 app.patch("/api/articles/:article_id", patchArticle);
 
-app.use(serverError); //catch all error controller
+app.use(handleCustomErrors);
+app.use(handlePSQLErrors);
+app.use(handle500s);
+
 app.all(`/*`, invalidPathError);
 module.exports = app;
