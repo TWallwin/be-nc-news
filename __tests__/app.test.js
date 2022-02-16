@@ -72,13 +72,13 @@ describe("app", () => {
     });
   });
   describe("/api/users", () => {
-    xtest("status 200 - returns an array of username objects", () => {
+    test("status 200 - returns an array of username objects", () => {
       return request(app)
         .get("/api/users")
         .expect(200)
-        .then(({ body: { users } }) => {
-          expect(users).toHaveLength(4);
-          users.forEach((user) => {
+        .then(({ body: { usernames } }) => {
+          expect(usernames).toHaveLength(4);
+          usernames.forEach((user) => {
             expect(user).toEqual(
               expect.objectContaining({ username: expect.any(String) })
             );
