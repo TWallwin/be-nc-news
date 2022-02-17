@@ -6,13 +6,11 @@ const {
   handle500s
 } = require("./controllers/errorControllers");
 const bodyParser = require("body-parser");
-
 const {
   getArticleById,
   patchArticle,
   getArticles
 } = require("./controllers/articleControllers");
-
 
 const { getUsers } = require("./controllers/userControllers");
 const { getTopics } = require("./controllers/topicControllers");

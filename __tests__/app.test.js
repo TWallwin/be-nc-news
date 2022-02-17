@@ -209,4 +209,12 @@ describe("app", () => {
         });
     });
   });
+  describe("/api/articles/:article_id/comments - POST", () => {
+    test("status 200 - adds a comment to the comment table", () => {});
+    test("status 200 - returns the added comment", () => {});
+    test("status 404 - article not found", () => {});
+    test("status 400 - invalid article_id", () => {});
+    test("status 400 - comment added invalid form", () => {});
+    test("status 400 - comment added invalid data types", () => {});
+  });
 });
