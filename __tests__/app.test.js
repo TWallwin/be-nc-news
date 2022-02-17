@@ -294,7 +294,7 @@ describe("app", () => {
     });
   });
   describe("/api/articles/:article_id/comments - POST", () => {
-    xtest("status 200 - adds a comment to the comment table", () => {
+    test("status 200 - adds a comment to the comment table", () => {
       const newComment = {
         username: "lurker",
         body: "first ever review"
@@ -304,10 +304,13 @@ describe("app", () => {
         .send(newComment)
         .expect(200)
         .then(() => {
-          return request(app);
+          return request(app).get("/api/articles/2/comments");
         })
-        .get("/api/");
+        .then(({ body: { comments } }) => {
+          expect(comments[0].body).toBe("first ever review");
+        });
     });
+
     test("status 200 - returns the added comment", () => {
       const newComment = {
         username: "lurker",
@@ -330,9 +333,57 @@ describe("app", () => {
           );
         });
     });
-    test("status 404 - article not found", () => {});
-    test("status 400 - invalid article_id", () => {});
-    test("status 400 - comment added invalid form", () => {});
-    test("status 400 - comment added invalid data types", () => {});
+    test("status 404 - article not found", () => {
+      const newComment = {
+        username: "lurker",
+        body: "first ever review"
+      };
+      return request(app)
+        .post("/api/articles/20/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("data not found");
+        });
+    });
+    test("status 400 - invalid article_id", () => {
+      const newComment = {
+        username: "lurker",
+        body: "first ever review"
+      };
+      return request(app)
+        .post("/api/articles/a/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("invalid input");
+        });
+    });
+    test("status 400 - comment added invalid form", () => {
+      const newComment = {
+        u: "lurker",
+        b: "first ever review"
+      };
+      return request(app)
+        .post("/api/articles/a/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("invalid input");
+        });
+    });
+    test("status 400 - comment added invalid data types", () => {
+      const newComment = {
+        username: 9,
+        body: 234
+      };
+      return request(app)
+        .post("/api/articles/a/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("invalid input");
+        });
+    });
   });
 });

@@ -10,6 +10,9 @@ exports.addComment = (username, body, articleId) => {
       [body, 0, username, time, articleId]
     )
     .then(({ rows }) => {
+      if (!rows[0]) {
+        return Promise.reject({ status: 404, msg: "data not found" });
+      }
       return rows[0];
     });
 };
