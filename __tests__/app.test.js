@@ -144,4 +144,10 @@ describe("app", () => {
         });
     });
   });
+  describe("/api/articles/article_id/comments", () => {
+    test("status 200 - should return an array of comments with correct properties", () => {});
+    test("status 404 - article does not exist", () => {});
+    test("status 400 - invalid article id", () => {});
+    test("status 404 - article has no comments", () => {});
+  });
 });
