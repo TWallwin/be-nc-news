@@ -11,7 +11,7 @@ const {
   patchArticle,
   getArticles
 } = require("./controllers/articleControllers");
-
+const { postComment } = require("./controllers/commentControllers");
 const { getUsers } = require("./controllers/userControllers");
 const { getTopics } = require("./controllers/topicControllers");
 
@@ -25,6 +25,8 @@ app.get("/api/users", getUsers);
 app.get("/api/articles", getArticles);
 
 app.patch("/api/articles/:article_id", patchArticle);
+
+app.post("/api/articles/:article_id/comments", postComment);
 
 app.use(handleCustomErrors);
 app.use(handlePSQLErrors);

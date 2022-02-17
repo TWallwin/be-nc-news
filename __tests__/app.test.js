@@ -215,21 +215,35 @@ describe("app", () => {
         username: "lurker",
         body: "first ever review"
       };
-      const returnComment = {
-        body: "first ever review",
-        votes: 0,
-        author: "lurker",
-        article_id: 2,
-        created_at: 1595294400000
-      };
-    });
-    xtest("status 200 - returns the added comment", () => {
       return request(app)
-        .post("./api/articles/2/comments")
+        .post("/api/articles/2/comments")
+        .send(newComment)
+        .expect(200)
+        .then(() => {
+          return request(app);
+        })
+        .get("/api/");
+    });
+    test("status 200 - returns the added comment", () => {
+      const newComment = {
+        username: "lurker",
+        body: "first ever review"
+      };
+
+      return request(app)
+        .post("/api/articles/2/comments")
         .send(newComment)
         .expect(200)
         .then(({ body: { comment } }) => {
-          expect(comment).toEqual();
+          expect(comment).toEqual(
+            expect.objectContaining({
+              body: "first ever review",
+              votes: 0,
+              author: "lurker",
+              article_id: 2,
+              created_at: expect.any(String)
+            })
+          );
         });
     });
     test("status 404 - article not found", () => {});
