@@ -17,6 +17,9 @@ exports.updateArticle = (id, incObj) => {
   if (Object.keys(incObj).join("") !== "inc_votes") {
     return Promise.reject({ status: 400, msg: "invalid input" });
   }
+  if (!/\d+/.test(id)) {
+    return Promise.reject({ status: 400, msg: "invalid article_id" });
+  }
   inc = Number(incObj.inc_votes);
   return db
     .query(

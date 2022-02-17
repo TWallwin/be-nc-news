@@ -9,10 +9,8 @@ exports.handleCustomErrors = (err, req, res, next) => {
   next(err);
 };
 exports.handlePSQLErrors = (err, req, res, next) => {
-  if (err.code === "22P02" && err.where.includes("1")) {
+  if (err.code === "22P02") {
     return res.status(400).send({ msg: "value of inc_votes wrong type" });
-  } else if (err.code === "22P02" && err.where.includes("2")) {
-    return res.status(400).send({ msg: "invalid article_id" });
   }
   next(err);
 };
