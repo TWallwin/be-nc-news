@@ -35,7 +35,7 @@ describe("app", () => {
         });
     });
   });
-  describe("/api/articles/article_id", () => {
+  describe("/api/articles/article_id - GET", () => {
     test("status 200 - responds with article corresponding to article_id", () => {
       const article1 = {
         article_id: 1,
@@ -67,7 +67,65 @@ describe("app", () => {
         .get("/api/articles/a")
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("bad request");
+          expect(msg).toBe("invalid article_id");
+        });
+    });
+  });
+  describe("/api/articles/article_id - PATCH", () => {
+    test("status 200 - updates article", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: "2" })
+        .then(() => {
+          return request(app).get("/api/articles/1");
+        })
+        .then(({ body: { article } }) => {
+          expect(article.votes).toEqual(102);
+        });
+    });
+    test("status 200 - responds with updated article", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: "1" })
+        .expect(200)
+        .then(({ body: { article } }) => {
+          expect(article.votes).toEqual(101);
+        });
+    });
+    test("status 400 - invalid article_id ", () => {
+      return request(app)
+        .patch("/api/articles/a")
+        .send({ inc_votes: "1" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("invalid article_id");
+        });
+    });
+    test("status 404 - article not found", () => {
+      return request(app)
+        .patch("/api/articles/15")
+        .send({ inc_votes: "1" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("article not found");
+        });
+    });
+    test("status 400 - malformed body eg{}", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({})
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("invalid input");
+        });
+    });
+    test("status 400 - body rejected by psql ie wrong type", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: "a" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("value of inc_votes wrong type");
         });
     });
   });

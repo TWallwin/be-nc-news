@@ -1,17 +1,37 @@
 const express = require("express");
 const {
   invalidPathError,
-  serverError
+  handleCustomErrors,
+  handlePSQLErrors,
+  handle500s
 } = require("./controllers/errorControllers");
+const bodyParser = require("body-parser");
+
+const {
+  getArticleById,
+  patchArticle
+} = require("./controllers/articleControllers");
+
+const { getTopics } = require("./controllers/topicControllers");
+
 
 const { getUsers } = require("./controllers/userControllers");
-const { getTopics, getArticleById } = require("./controllers/topicControllers");
+const { getTopics} = require("./controllers/topicControllers");
+
 const app = express();
+
+app.use(bodyParser.json());
 
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/users", getUsers);
 
-app.use(serverError); //catch all error controller
+app.patch("/api/articles/:article_id", patchArticle);
+
+app.use(handleCustomErrors);
+app.use(handlePSQLErrors);
+app.use(handle500s);
+
+
 app.all(`/*`, invalidPathError);
 module.exports = app;
