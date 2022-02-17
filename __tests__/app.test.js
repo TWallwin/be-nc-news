@@ -210,7 +210,7 @@ describe("app", () => {
         });
     });
   });
-  describe("/api/articles/article_id/comments", () => {
+  describe("/api/articles/article_id/comments - GET", () => {
     test("status 200 - should return an array of comments with correct properties", () => {
       const comments5 = [
         {
