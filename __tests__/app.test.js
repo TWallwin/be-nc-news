@@ -146,7 +146,7 @@ describe("app", () => {
         .send({ inc_votes: "a" })
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("value of inc_votes wrong type");
+          expect(msg).toBe("invalid input");
         });
     });
   });
@@ -165,6 +165,7 @@ describe("app", () => {
         });
     });
   });
+
   describe("/api/articles - GET", () => {
     test("status 200 - responds with an array of articles data", () => {
       return request(app)
@@ -206,6 +207,59 @@ describe("app", () => {
           expect(articles).toBeSortedBy("created_at", {
             compare: compareDates
           });
+        });
+    });
+  });
+  describe("/api/articles/article_id/comments", () => {
+    test("status 200 - should return an array of comments with correct properties", () => {
+      const comments5 = [
+        {
+          body: "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
+          votes: 16,
+          author: "icellusedkars",
+          comment_id: 14,
+          article_id: 5,
+          created_at: "2020-06-09T05:00:00.000Z"
+        },
+        {
+          body: "I am 100% sure that we're not completely sure.",
+          votes: 1,
+          author: "butter_bridge",
+          comment_id: 15,
+          article_id: 5,
+          created_at: "2020-11-24T00:08:00.000Z"
+        }
+      ];
+
+      return request(app)
+        .get("/api/articles/5/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toEqual(comments5);
+        });
+    });
+    test("status 404 - article does not exist", () => {
+      return request(app)
+        .get("/api/articles/20/comments")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("data not found");
+        });
+    });
+    test("status 400 - invalid article id", () => {
+      return request(app)
+        .get("/api/articles/a/comments")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("invalid input");
+        });
+    });
+    test("status 404 - article has no comments", () => {
+      return request(app)
+        .get("/api/articles/2/comments")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("data not found");
         });
     });
   });
