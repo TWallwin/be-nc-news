@@ -129,4 +129,19 @@ describe("app", () => {
         });
     });
   });
+  describe("/api/users", () => {
+    test("status 200 - returns an array of username objects", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body: { usernames } }) => {
+          expect(usernames).toHaveLength(4);
+          usernames.forEach((user) => {
+            expect(user).toEqual(
+              expect.objectContaining({ username: expect.any(String) })
+            );
+          });
+        });
+    });
+  });
 });
