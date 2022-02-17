@@ -209,6 +209,36 @@ describe("app", () => {
           });
         });
     });
+    test("articles should contain a comment count property", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toHaveLength(12);
+          articles.forEach((article) => {
+            expect(article).toEqual(
+              expect.objectContaining({
+                title: expect.any(String),
+                comment_count: expect.any(String),
+                topic: expect.any(String),
+                author: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                article_id: expect.any(Number)
+              })
+            );
+          });
+        });
+    });
+    test("comment_count should be the number of comments on the article", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles[0].comment_count).toBe("2");
+          expect(articles[1].comment_count).toBe("1");
+        });
+    });
   });
   describe("/api/articles/article_id/comments - GET", () => {
     test("status 200 - should return an array of comments with correct properties", () => {
