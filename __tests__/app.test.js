@@ -129,7 +129,7 @@ describe("app", () => {
         });
     });
   });
-  describe("/api/users", () => {
+  describe("/api/users - GET", () => {
     test("status 200 - returns an array of username objects", () => {
       return request(app)
         .get("/api/users")
