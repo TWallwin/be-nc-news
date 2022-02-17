@@ -24,6 +24,9 @@ exports.updateArticle = (id, incObj) => {
       [inc, id]
     )
     .then(({ rows }) => {
+      if (!rows[0]) {
+        return Promise.reject({ status: 404, msg: "article not found" });
+      }
       return rows[0];
     });
 };

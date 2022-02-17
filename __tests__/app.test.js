@@ -71,8 +71,8 @@ describe("app", () => {
         });
     });
   });
-  describe("/api/articles/article_id - PATCH", () => {
-    test("status 200 - updates article", () => {
+  describe.only("/api/articles/article_id - PATCH", () => {
+    xtest("status 200 - updates article", () => {
       return request(app)
         .patch("/api/articles/1")
         .send({ inc_votes: "2" })
@@ -83,7 +83,7 @@ describe("app", () => {
           expect(article.votes).toEqual(102);
         });
     });
-    test("status 200 - responds with updated article", () => {
+    xtest("status 200 - responds with updated article", () => {
       return request(app)
         .patch("/api/articles/1")
         .send({ inc_votes: "1" })
@@ -92,7 +92,7 @@ describe("app", () => {
           expect(article.votes).toEqual(101);
         });
     });
-    test("status 400 - invalid article_id ", () => {
+    xtest("status 400 - invalid article_id ", () => {
       return request(app)
         .patch("/api/articles/a")
         .send({ inc_votes: "1" })
@@ -101,7 +101,7 @@ describe("app", () => {
           expect(msg).toBe("invalid article_id");
         });
     });
-    test("status 404 - article not found", () => {
+    xtest("status 404 - article not found", () => {
       return request(app)
         .patch("/api/articles/15")
         .send({ inc_votes: "1" })
@@ -110,7 +110,7 @@ describe("app", () => {
           expect(msg).toBe("article not found");
         });
     });
-    test("status 400 - malformed body eg{}", () => {
+    xtest("status 400 - malformed body eg{}", () => {
       return request(app)
         .patch("/api/articles/1")
         .send({})
@@ -119,7 +119,7 @@ describe("app", () => {
           expect(msg).toBe("invalid input");
         });
     });
-    test("status 400 - body rejected by psql ie wrong type", () => {
+    xtest("status 400 - body rejected by psql ie wrong type", () => {
       return request(app)
         .patch("/api/articles/1")
         .send({ inc_votes: "a" })
