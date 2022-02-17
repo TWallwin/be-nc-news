@@ -209,7 +209,7 @@ describe("app", () => {
           });
         });
     });
-    test("articles should contain a comment count property", () => {
+    test("status 200 - articles should contain a comment count property", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -230,7 +230,7 @@ describe("app", () => {
           });
         });
     });
-    test("comment_count should be the number of comments on the article", () => {
+    test("status 200 - comment_count should be the number of comments on the article", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -239,6 +239,9 @@ describe("app", () => {
           expect(articles[1].comment_count).toBe("1");
         });
     });
+    test("status 200 - should accept sort_by query, defaults to date", () => {});
+    test("status 200 - should accept order query, defaults to DESC", () => {});
+    test("status 200 - should accept topic query which filters by topic", () => {});
   });
   describe("/api/articles/article_id/comments - GET", () => {
     test("status 200 - should return an array of comments with correct properties", () => {
