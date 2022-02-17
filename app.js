@@ -12,7 +12,7 @@ const {
   patchArticle
 } = require("./controllers/articleControllers");
 
-const { getTopics } = require("./controllers/topicControllers");
+
 
 
 const { getUsers } = require("./controllers/userControllers");
