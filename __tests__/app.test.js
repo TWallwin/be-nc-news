@@ -129,7 +129,7 @@ describe("app", () => {
         });
     });
   });
-  describe("/api/users", () => {
+  describe("/api/users - GET", () => {
     test("status 200 - returns an array of username objects", () => {
       return request(app)
         .get("/api/users")
@@ -140,6 +140,50 @@ describe("app", () => {
             expect(user).toEqual(
               expect.objectContaining({ username: expect.any(String) })
             );
+          });
+        });
+    });
+  });
+  describe("/api/articles - GET", () => {
+    test("status 200 - responds with an array of articles data", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toHaveLength(12);
+          articles.forEach((article) => {
+            expect(article).toEqual(
+              expect.objectContaining({
+                title: expect.any(String),
+                topic: expect.any(String),
+                author: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                article_id: expect.any(Number)
+              })
+            );
+          });
+        });
+    });
+    test("status 200 - articles should be sorted ", () => {
+      const compareDates = (a, b) => {
+        //creating comparison function
+        if (Date.parse(a) > Date.parse(b)) {
+          return -1;
+        }
+        if (Date.parse(b) > Date.parse(a)) {
+          return 1;
+        }
+
+        return 0;
+      };
+
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy("created_at", {
+            compare: compareDates
           });
         });
     });

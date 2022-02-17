@@ -33,3 +33,13 @@ exports.updateArticle = (id, incObj) => {
       return rows[0];
     });
 };
+
+exports.fetchArticles = () => {
+  return db
+    .query(
+      "SELECT title, topic, author, created_at, votes, article_id FROM articles ORDER BY created_at DESC; "
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};
