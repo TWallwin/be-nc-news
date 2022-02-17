@@ -10,7 +10,7 @@ exports.handleCustomErrors = (err, req, res, next) => {
 };
 exports.handlePSQLErrors = (err, req, res, next) => {
   if (err.code === "22P02") {
-    return res.status(400).send({ msg: "value of inc_votes wrong type" });
+    return res.status(400).send({ msg: "invalid input" });
   }
   next(err);
 };

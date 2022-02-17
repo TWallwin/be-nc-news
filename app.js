@@ -12,11 +12,10 @@ const {
   patchArticle
 } = require("./controllers/articleControllers");
 
-
-
+const { getArticleComments } = require("./controllers/commentControllers");
 
 const { getUsers } = require("./controllers/userControllers");
-const { getTopics} = require("./controllers/topicControllers");
+const { getTopics } = require("./controllers/topicControllers");
 
 const app = express();
 
@@ -25,13 +24,13 @@ app.use(bodyParser.json());
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/users", getUsers);
+app.get("/api/articles/:article_id/comments", getArticleComments);
 
 app.patch("/api/articles/:article_id", patchArticle);
 
 app.use(handleCustomErrors);
 app.use(handlePSQLErrors);
 app.use(handle500s);
-
 
 app.all(`/*`, invalidPathError);
 module.exports = app;
