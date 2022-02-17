@@ -210,8 +210,28 @@ describe("app", () => {
     });
   });
   describe("/api/articles/:article_id/comments - POST", () => {
-    test("status 200 - adds a comment to the comment table", () => {});
-    test("status 200 - returns the added comment", () => {});
+    xtest("status 200 - adds a comment to the comment table", () => {
+      const newComment = {
+        username: "lurker",
+        body: "first ever review"
+      };
+      const returnComment = {
+        body: "first ever review",
+        votes: 0,
+        author: "lurker",
+        article_id: 2,
+        created_at: 1595294400000
+      };
+    });
+    xtest("status 200 - returns the added comment", () => {
+      return request(app)
+        .post("./api/articles/2/comments")
+        .send(newComment)
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment).toEqual();
+        });
+    });
     test("status 404 - article not found", () => {});
     test("status 400 - invalid article_id", () => {});
     test("status 400 - comment added invalid form", () => {});
