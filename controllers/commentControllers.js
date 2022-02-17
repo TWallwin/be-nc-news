@@ -1,4 +1,4 @@
-const { addComment } = require("../models/commentModels");
+const { addComment, fetchArticleComments } = require("../models/commentModels");
 
 exports.postComment = (req, res, next) => {
   const { username, body } = req.body;
@@ -9,4 +9,14 @@ exports.postComment = (req, res, next) => {
       res.status(200).send({ comment });
     })
     .catch(console.log);
+};
+
+exports.getArticleComments = (req, res, next) => {
+  const id = req.params.article_id;
+
+  fetchArticleComments(id)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch(next);
 };
