@@ -3,6 +3,7 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
 const db = require("../db/connection.js");
 const request = require("supertest");
+const { readFile } = require("fs/promises");
 let compareDates;
 
 beforeEach(() => {
@@ -528,6 +529,16 @@ describe("app", () => {
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("invalid comment_id");
+        });
+    });
+  });
+  describe("/api", () => {
+    test("status 200 - responds with endpoint object", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({ body: { endpoints } }) => {
+          expect(typeof endpoints).toBe("object");
         });
     });
   });
