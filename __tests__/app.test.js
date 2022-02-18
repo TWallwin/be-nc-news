@@ -376,7 +376,7 @@ describe("app", () => {
         .get("/api/articles/20/comments")
         .expect(404)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("data not found");
+          expect(msg).toBe("article not found");
         });
     });
     test("status 400 - invalid article id", () => {
@@ -384,7 +384,7 @@ describe("app", () => {
         .get("/api/articles/a/comments")
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("invalid input");
+          expect(msg).toBe("invalid article_id");
         });
     });
     test("status 404 - article has no comments", () => {
@@ -393,6 +393,112 @@ describe("app", () => {
         .expect(404)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("data not found");
+        });
+    });
+  });
+  describe("/api/articles/:article_id/comments - POST", () => {
+    test("status 200 - adds a comment to the comment table", () => {
+      const newComment = {
+        username: "lurker",
+        body: "first ever review"
+      };
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send(newComment)
+        .expect(200)
+        .then(() => {
+          return request(app).get("/api/articles/2/comments");
+        })
+        .then(({ body: { comments } }) => {
+          expect(comments[0].body).toBe("first ever review");
+        });
+    });
+
+    test("status 200 - returns the added comment", () => {
+      const newComment = {
+        username: "lurker",
+        body: "first ever review"
+      };
+
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send(newComment)
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              body: "first ever review",
+              votes: 0,
+              author: "lurker",
+              article_id: 2,
+              created_at: expect.any(String)
+            })
+          );
+        });
+    });
+    test("status 404 - article not found", () => {
+      const newComment = {
+        username: "lurker",
+        body: "first ever review"
+      };
+      return request(app)
+        .post("/api/articles/20/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("article not found");
+        });
+    });
+    test("status 400 - invalid article_id", () => {
+      const newComment = {
+        username: "lurker",
+        body: "first ever review"
+      };
+      return request(app)
+        .post("/api/articles/a/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("invalid article_id");
+        });
+    });
+    test("status 400 - comment added invalid form", () => {
+      const newComment = {
+        u: "lurker",
+        b: "first ever review"
+      };
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("comment added invalid form");
+        });
+    });
+    test("status 400 - comment added invalid data type", () => {
+      const newComment = {
+        username: "lurker",
+        body: 234
+      };
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("invalid body");
+        });
+    });
+    test("status 404 - username does not exist", () => {
+      const newComment = {
+        username: "a",
+        body: 234
+      };
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("username does not exist");
         });
     });
   });

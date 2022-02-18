@@ -12,6 +12,9 @@ exports.handlePSQLErrors = (err, req, res, next) => {
   if (err.code === "22P02") {
     return res.status(400).send({ msg: "invalid input" });
   }
+  if (err.code === "23503") {
+    return res.status(404).send({ msg: "article not found" });
+  }
   next(err);
 };
 exports.handle500s = (err, req, res, next) => {
