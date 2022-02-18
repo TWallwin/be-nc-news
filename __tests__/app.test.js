@@ -3,8 +3,23 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
 const db = require("../db/connection.js");
 const request = require("supertest");
+let compareDates;
 
-beforeEach(() => seed(data));
+beforeEach(() => {
+  return seed(data).then(() => {
+    compareDates = (a, b) => {
+      //creating comparison function
+      if (Date.parse(a) > Date.parse(b)) {
+        return -1;
+      }
+      if (Date.parse(b) > Date.parse(a)) {
+        return 1;
+      }
+
+      return 0;
+    };
+  });
+});
 
 afterAll(() => db.end());
 describe("app", () => {
@@ -239,9 +254,94 @@ describe("app", () => {
           expect(articles[1].comment_count).toBe("1");
         });
     });
-    test("status 200 - should accept sort_by query, defaults to date", () => {});
-    test("status 200 - should accept order query, defaults to DESC", () => {});
-    test("status 200 - should accept topic query which filters by topic", () => {});
+    describe("queries:", () => {
+      test("status 200 - should accept sort_by query", () => {
+        return request(app)
+          .get("/api/articles?sort_by=author")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toBeSortedBy("author", { descending: true });
+          });
+      });
+      test("... defaults to date", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toBeSortedBy("created_at", {
+              compare: compareDates
+            });
+          });
+      });
+      test("status 200 - should accept order query...", () => {
+        return request(app)
+          .get("/api/articles?order=asc&sort_by=author")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toBeSortedBy("author", { descending: false });
+          });
+      });
+      test("...defaults to desc", () => {
+        return request(app)
+          .get("/api/articles?sort_by=author")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toBeSortedBy("author", { descending: true });
+          });
+      });
+      test("status 200 - should accept topic query which filters by topic", () => {
+        return request(app)
+          .get("/api/articles?topic=mitch")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            articles.forEach((article) => {
+              expect(article).toEqual(
+                expect.objectContaining({
+                  title: expect.any(String),
+                  comment_count: expect.any(String),
+                  topic: "mitch",
+                  author: expect.any(String),
+                  created_at: expect.any(String),
+                  votes: expect.any(Number),
+                  article_id: expect.any(Number)
+                })
+              );
+            });
+          });
+      });
+      test("status 400 - sort_by value invalid", () => {
+        return request(app)
+          .get("/api/articles?sort_by=a")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("invalid query value");
+          });
+      });
+      test("status 400 - order value invalid", () => {
+        return request(app)
+          .get("/api/articles?order=n")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("invalid query value");
+          });
+      });
+      test("status 400 - topic value invalid", () => {
+        return request(app)
+          .get("/api/articles?topic=a")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("invalid query value");
+          });
+      });
+      test("status 400 - invalid query parameter", () => {
+        return request(app)
+          .get("/api/articles/?a=a")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("invalid query parameter");
+          });
+      });
+    });
   });
   describe("/api/articles/article_id/comments - GET", () => {
     test("status 200 - should return an array of comments with correct properties", () => {
