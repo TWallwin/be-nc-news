@@ -39,14 +39,32 @@ exports.updateArticle = (id, incObj) => {
     });
 };
 
-exports.fetchArticles = () => {
-  return db
-    .query(
-      `SELECT articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_id, COUNT(comments.article_id) AS comment_count 
-      FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id  
-      GROUP BY articles.article_id ORDER BY created_at DESC; `
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+exports.fetchArticles = (sort_by = "created_at", order_by = "DESC", topic) => {
+  if (
+    !["title", "topic", "created_at", "author", "votes", "article_id"].includes(
+      sort_by
+    ) ||
+    !["ASC", "DESC"].includes(order_by)
+  ) {
+    return Promise.reject({ status: 400, msg: "invalid query value" });
+  }
+  let key = [];
+
+  let qryString = `SELECT articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_id, COUNT(comments.article_id) AS comment_count 
+  FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id `;
+
+  if (topic) {
+    key.push(topic);
+    qryString += `
+    WHERE articles.topic = $1 `;
+  }
+  qryString += `
+  GROUP BY articles.article_id ORDER BY ${sort_by} ${order_by}`;
+
+  return db.query(qryString, key).then(({ rows }) => {
+    if (rows.length === 0 && topic) {
+      return Promise.reject({ status: 400, msg: "invalid query value" });
+    }
+    return rows;
+  });
 };

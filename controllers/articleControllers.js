@@ -27,7 +27,21 @@ exports.patchArticle = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  fetchArticles()
+  //destructure and prepare querys
+  const sortBy = req.query.sort_by;
+  let order = req.query.order;
+  let topic = req.query.topic;
+  if (order) {
+    order = order.toUpperCase();
+  }
+  //check if query exists, if it doesn't throw an error
+  for (let i in Object.keys(req.query)) {
+    if (!["sort_by", "order", "topic"].includes(Object.keys(req.query)[i])) {
+      return next({ status: 400, msg: "invalid query parameter" });
+    }
+  }
+  //pass query into model function
+  fetchArticles(sortBy, order, topic)
     .then((articles) => {
       res.status(200).send({ articles });
     })
