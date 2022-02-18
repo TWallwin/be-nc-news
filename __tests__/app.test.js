@@ -502,4 +502,33 @@ describe("app", () => {
         });
     });
   });
+  describe("/api/comments/comment_id - DELETE", () => {
+    test("status 202 - should delete comment by comment_id", () => {
+      return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+        .then(() => {
+          return request(app).get("/api/articles/9/comments/");
+        })
+        .then(({ body: { comments } }) => {
+          expect(comments).toHaveLength(1);
+        });
+    });
+    test("status 404 - comment not found", () => {
+      return request(app)
+        .delete("/api/comments/30")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("comment not found");
+        });
+    });
+    test("status 400 - comment_id invalid", () => {
+      return request(app)
+        .delete("/api/comments/a")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("invalid comment_id");
+        });
+    });
+  });
 });
