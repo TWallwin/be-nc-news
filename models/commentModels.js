@@ -3,6 +3,12 @@ const { convertTimestampToDate } = require("../db/helpers/utils");
 
 exports.addComment = (username, body, articleId) => {
   const time = convertTimestampToDate({ created_at: Date.now() }).created_at;
+  if (typeof body !== "string") {
+    return Promise.reject({ status: 400, msg: "invalid body" });
+  }
+  if (!username | !body) {
+    return Promise.reject({ status: 400, msg: "comment added wrong form" });
+  }
 
   return db
     .query(
@@ -10,9 +16,6 @@ exports.addComment = (username, body, articleId) => {
       [body, 0, username, time, articleId]
     )
     .then(({ rows }) => {
-      if (!rows[0]) {
-        return Promise.reject({ status: 404, msg: "data not found" });
-      }
       return rows[0];
     });
 };

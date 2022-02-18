@@ -273,7 +273,7 @@ describe("app", () => {
         .get("/api/articles/20/comments")
         .expect(404)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("data not found");
+          expect(msg).toBe("article not found");
         });
     });
     test("status 400 - invalid article id", () => {
@@ -281,7 +281,7 @@ describe("app", () => {
         .get("/api/articles/a/comments")
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("invalid input");
+          expect(msg).toBe("invalid article_id");
         });
     });
     test("status 404 - article has no comments", () => {
@@ -343,7 +343,7 @@ describe("app", () => {
         .send(newComment)
         .expect(404)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("data not found");
+          expect(msg).toBe("article not found");
         });
     });
     test("status 400 - invalid article_id", () => {
@@ -356,7 +356,7 @@ describe("app", () => {
         .send(newComment)
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("invalid input");
+          expect(msg).toBe("invalid article_id");
         });
     });
     test("status 400 - comment added invalid form", () => {
@@ -365,24 +365,37 @@ describe("app", () => {
         b: "first ever review"
       };
       return request(app)
-        .post("/api/articles/a/comments")
+        .post("/api/articles/2/comments")
         .send(newComment)
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("invalid input");
+          expect(msg).toBe("comment added invalid form");
         });
     });
-    test("status 400 - comment added invalid data types", () => {
+    test("status 400 - comment added invalid data type", () => {
       const newComment = {
-        username: 9,
+        username: "lurker",
         body: 234
       };
       return request(app)
-        .post("/api/articles/a/comments")
+        .post("/api/articles/2/comments")
         .send(newComment)
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("invalid input");
+          expect(msg).toBe("invalid body");
+        });
+    });
+    test("status 404 - username does not exist", () => {
+      const newComment = {
+        username: "a",
+        body: 234
+      };
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("username does not exist");
         });
     });
   });
