@@ -6,10 +6,6 @@ exports.addComment = (username, body, articleId) => {
   if (typeof body !== "string") {
     return Promise.reject({ status: 400, msg: "invalid body" });
   }
-  if (!username | !body) {
-    return Promise.reject({ status: 400, msg: "comment added wrong form" });
-  }
-
   return db
     .query(
       `INSERT INTO comments (body, votes, author, created_at, article_id) VALUES ($1,$2,$3,$4,$5) RETURNING *`,
