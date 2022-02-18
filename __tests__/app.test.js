@@ -3,7 +3,7 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
 const db = require("../db/connection.js");
 const request = require("supertest");
-const { readFile } = require("fs/promises");
+
 let compareDates;
 
 beforeEach(() => {
