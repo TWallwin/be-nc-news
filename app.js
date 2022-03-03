@@ -34,7 +34,7 @@ app.get("/api/articles/:article_id/comments", getArticleComments);
 app.get("/api", (req, res, next) => {
   readFile("./endpoints.json").then((body) => {
     const endpoints = JSON.parse(body);
-    console.log(endpoints);
+
     res.status(200).send({ endpoints });
   });
 });
