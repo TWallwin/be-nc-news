@@ -34,15 +34,9 @@ exports.getArticles = (req, res, next) => {
   if (order) {
     order = order.toUpperCase();
   }
-  //check if query exists, if it doesn't throw an error
-  for (let i in Object.keys(req.query)) {
-    if (!["sort_by", "order", "topic"].includes(Object.keys(req.query)[i])) {
-      return next({ status: 400, msg: "invalid query parameter" });
-    }
-  }
 
   //pass query into model function
-  fetchArticles(sortBy, order, topic)
+  fetchArticles(sortBy, order, topic, req)
     .then((articles) => {
       res.status(200).send({ articles });
     })

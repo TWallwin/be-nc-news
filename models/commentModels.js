@@ -3,6 +3,9 @@ const { convertTimestampToDate } = require("../db/helpers/utils");
 
 exports.addComment = (username, body, articleId) => {
   const time = convertTimestampToDate({ created_at: Date.now() }).created_at;
+  if (!body) {
+    return Promise.reject({ status: 400, msg: "comment added invalid form" });
+  }
   if (typeof body !== "string") {
     return Promise.reject({ status: 400, msg: "invalid body" });
   }
@@ -26,7 +29,7 @@ exports.fetchArticleComments = (id) => {
       return rows;
     });
 };
-exports.fetchComment = (id) => {
+exports.checkCommentExists = (id) => {
   if (!/\d+/.test(id)) {
     return Promise.reject({ status: 400, msg: "invalid comment_id" });
   }
