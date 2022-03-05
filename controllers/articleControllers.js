@@ -40,7 +40,7 @@ exports.getArticles = (req, res, next) => {
       return next({ status: 400, msg: "invalid query parameter" });
     }
   }
-  console.log(req.query);
+
   //pass query into model function
   fetchArticles(sortBy, order, topic)
     .then((articles) => {
