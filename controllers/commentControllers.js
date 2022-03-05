@@ -58,7 +58,6 @@ exports.removeComment = (req, res, next) => {
       res.status(204).end();
     })
     .catch((err) => {
-      console.log(err);
       return next(err);
     });
 };
