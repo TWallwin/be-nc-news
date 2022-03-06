@@ -66,6 +66,39 @@
     }
   },
   "PATCH /api/articles/:article_id": {
-    "description": "updates the votes for the article, responds with "
+    "description": "updates the votes for the article, responds with the updated article",
+    "queries": [],
+    "exampleBody": { "inc_votes": 1 },
+    "exampleResponse": {
+      "comment": {
+        "title": "Living in the shadow of a great man",
+        "topic": "mitch",
+        "author": "butter_bridge",
+        "body": "I find this existence challenging",
+        "created_at": 1594329060000,
+        "votes": 100
+      }
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "adds a new comment,responds with the added comment",
+    "queries": [],
+    "exampleBody": {
+      "username": "harry",
+      "body": "this is a new comment"
+    },
+    "exampleResponse": {
+      "comment": {
+        "body": "this is a new comment",
+        "author": "harry",
+        "votes": 0,
+        "article_id": 1,
+        "created_at": 1586179020000
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes comment, responds with status 204",
+    "queries": []
   }
 }
