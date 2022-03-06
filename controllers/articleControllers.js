@@ -3,6 +3,7 @@ const {
   updateArticle,
   fetchArticles
 } = require("../models/articleModels");
+const { checkTopicExists } = require("../models/topicModels");
 
 exports.getArticleById = (req, res, next) => {
   const id = req.params.article_id;
@@ -36,9 +37,15 @@ exports.getArticles = (req, res, next) => {
   }
 
   //pass query into model function
-  fetchArticles(sortBy, order, topic, req)
-    .then((articles) => {
+  Promise.all([
+    checkTopicExists(topic),
+    fetchArticles(sortBy, order, topic, req)
+  ])
+    .then((promise) => {
+      const articles = promise[1];
       res.status(200).send({ articles });
     })
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 };
