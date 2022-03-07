@@ -20,9 +20,9 @@ const {
 
 const { getUsers } = require("./controllers/userControllers");
 const { getTopics } = require("./controllers/topicControllers");
-
+const cors = require("cors");
 const app = express();
-
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/api/topics", getTopics);
