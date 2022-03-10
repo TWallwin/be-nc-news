@@ -56,9 +56,15 @@ exports.fetchArticles = (
   }
   //check the query values passed are valid, throw and error if not
   if (
-    !["title", "topic", "created_at", "author", "votes", "article_id"].includes(
-      sort_by
-    ) ||
+    ![
+      "title",
+      "topic",
+      "created_at",
+      "author",
+      "votes",
+      "article_id",
+      "comment_count"
+    ].includes(sort_by) ||
     !["ASC", "DESC"].includes(order_by)
   ) {
     return Promise.reject({ status: 400, msg: "invalid query value" });
