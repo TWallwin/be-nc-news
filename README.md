@@ -1,6 +1,7 @@
 # Northcoders News API
 
 This backend is hosted on heroku : https://tom-nc-news.herokuapp.com/
+The github repo for the frontend of this project is : https://github.com/TWallwin/fe-nc-news
 
 This is the backend for the website NC-News which is a frontend portfolio project I built in react.
 
