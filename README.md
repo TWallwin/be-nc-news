@@ -1,6 +1,7 @@
 # Northcoders News API
 
 This backend is hosted on heroku : https://tom-nc-news.herokuapp.com/
+
 The github repo for the frontend of this project is : https://github.com/TWallwin/fe-nc-news
 
 This is the backend for the website NC-News which is a frontend portfolio project I built in react.
@@ -10,6 +11,7 @@ This backend is built using PSQL, Node, Express and Jest. To access a list of po
 Mininum versions of:
 
 Node.js : 16.13.1
+
 Postgresql : 14.1
 
 required to run locally.
